@@ -7,7 +7,6 @@
 //
 
 #pragma once
-#pragma once
 
 #include "ofMain.h"
 #include "ofxGrblSettings.h"

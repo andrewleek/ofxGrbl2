@@ -59,7 +59,7 @@ namespace ofxGrbl
     //			cout <<_byte;
                 if (_byte == '\n' || _byte == '\r') {
                     if (readBuffer != "") {
-                        ofLogVerbose(" ofxGrbl ") << "[ RECEIVE ] " << readBuffer ;
+                        ofLogVerbose("ofxGrbl") << "[ RECEIVE ] " << readBuffer ;
                         if (readBuffer.find("Grbl") != string::npos)
                         {
                             if (!isDeviceReady)
@@ -74,19 +74,19 @@ namespace ofxGrbl
                                 isReadyToSend = true;
                             //cout << "ready to send\n";
                                 //sentCount--;
-                                //ofLogVerbose(" ofxGrbl ") << "Sent: " << sentCount ;
+                                //ofLogVerbose("ofxGrbl") << "Sent: " << sentCount ;
                         }
                         else if (readBuffer.substr(0,6) == "error:")
                         {
-                                    ofLogVerbose(" ofxGrbl ") << "[ ERROR : " << getGrblStatusString(ofToInt(readBuffer.substr(6))) << " ]" ;
+                                    ofLogVerbose("ofxGrbl") << "[ ERROR : " << getGrblStatusString(ofToInt(readBuffer.substr(6))) << " ]" ;
                                 
-    //						ofLogVerbose(" ofxGrbl ") << "[ ERROR ]";
+    //						ofLogVerbose("ofxGrbl") << "[ ERROR ]";
                                     //						isPause = true;
                                     isReadyToSend = true;
                         }
                         else if (readBuffer.substr(0,6) == "ALARM:")
                         {
-                                ofLogVerbose(" ofxGrbl ") << "[ ALARM : " << getGrblAlarmString(ofToInt(readBuffer.substr(6))) << " ]" ;
+                                ofLogVerbose("ofxGrbl") << "[ ALARM : " << getGrblAlarmString(ofToInt(readBuffer.substr(6))) << " ]" ;
                                 
                         }
                         if (readBuffer[0] == '<')
@@ -96,7 +96,7 @@ namespace ofxGrbl
                              vector<string> _status = ofSplitString(readBuffer, ",");
                              vector<string> _posx = ofSplitString(_status[1], ":");
                              vector<string> _posz = ofSplitString(_status[3], ">");
-                             ofLogVerbose(" ofxGrbl ") << "[ POSITION ] " << _posx[1] << ", " << _status[2] << ", " << _posz[0] ;
+                             ofLogVerbose("ofxGrbl") << "[ POSITION ] " << _posx[1] << ", " << _status[2] << ", " << _posz[0] ;
                              currentPos = ofVec2f(ofToFloat(_posx[1]) / (float)GRBL_WIDTH, ofToFloat(_status[2]) / (float)GRBL_HEIGHT);
                              */
                             
@@ -110,7 +110,7 @@ namespace ofxGrbl
                                     currentPos[pind] = ofToFloat(_pos[pind]);
                                 }
                                 
-                                ofLogVerbose(" ofxGrbl ") << "[ POSITION ] " << currentPos;
+                                ofLogVerbose("ofxGrbl") << "[ POSITION ] " << currentPos;
                                 
                                 // Events
                                 ofNotifyEvent(PositionEvent, currentPos);
@@ -124,6 +124,7 @@ namespace ofxGrbl
                 }
             }
         }
+        
         if (bConnected && isDeviceReady) {
     //		cout << ".";
             // send
@@ -140,11 +141,11 @@ namespace ofxGrbl
         }
     }
     //--------------------------------------------------------------
-    void device::close() {
-        if (bConnected) {
-            
+    void device::close()
+    {
+        if (bConnected)
+        {
             if (bSpindle) enableSpindle(false, true);
-            //		sendMessage("G90 G0 X0 Y0 Z0", true);
             _closeSerial();
         }
     }
@@ -153,10 +154,10 @@ namespace ofxGrbl
         string _ext = ofFilePath::getFileExt(_path);
         if (_ext == "gcode" || _ext == "nc" || _ext == "ngc") {
             
-            ofLogVerbose(" ofxGrbl ") << "loadFromFile( " << _path << " )" ;
+            ofLogVerbose("ofxGrbl") << "loadFromFile( " << _path << " )" ;
             string _text = string(ofBufferFromFile(_path));
             vector<string> _linelist = ofSplitString(_text, "\n", true);
-            ofLogVerbose(" ofxGrbl ") << "loadFromFile() : " << _linelist.size() << " lines." ;
+            ofLogVerbose("ofxGrbl") << "loadFromFile() : " << _linelist.size() << " lines." ;
             
             clear();
             
@@ -209,7 +210,7 @@ namespace ofxGrbl
                 sendMessage(_linelist[i]);
             }
         } else {
-            ofLogVerbose(" ofxGrbl ") << "Invalid extension. Please use ( .gcode / .ngc / .nc ). " ;
+            ofLogVerbose("ofxGrbl") << "Invalid extension. Please use ( .gcode / .ngc / .nc ). " ;
         }
     }
 
@@ -297,23 +298,31 @@ namespace ofxGrbl
     //--------------------------------------------------------------
     void device::sendMessage(const std::string& _msg, bool direct)
     {
-    //	cout << _msg << endl;
+    	cout << _msg << endl;
         if (direct) {
-            if (bConnected) {
-                if (_msg != "") {
-
+            if (bConnected)
+            {
+                if (_msg != "")
+                {
                     string _message = _msg + "\n";
                     unsigned char* writeByte = (unsigned char*)_message.c_str();
                     serial.writeBytes(writeByte, _message.length());
                     ofLogVerbose(" ofxGrbl::device::sendMessage()") << _msg;
-                }else {
-                    ofLogVerbose(" ofxGrbl ") << "sendMessage() : Message is empty." ;
                 }
-            }else {
-                ofLogVerbose(" ofxGrbl ") << "sendMessage() : Serial is not connected." ;
+                else
+                {
+                    ofLogVerbose("ofxGrbl") << "sendMessage() : Message is empty." ;
+                }
             }
-        }else {
-            if (_msg != "") {
+            else
+            {
+                ofLogVerbose("ofxGrbl") << "sendMessage() : Serial is not connected." ;
+            }
+        }
+        else
+        {
+            if (_msg != "")
+            {
                 string _message = _msg;
                 sendQueList.push_back(_message);
             }
@@ -374,7 +383,7 @@ namespace ofxGrbl
     //--------------------------------------------------------------
     void device::setOrigin(const glm::vec3& _origin)
     {
-        ofLogVerbose(" ofxGrbl ") << "setOrigin(" << _origin << ")" ;
+        ofLogVerbose("ofxGrbl") << "setOrigin(" << _origin << ")" ;
         _settings.origin = _origin;
         
         setPosition(_settings.origin.get(), true, true);
@@ -400,15 +409,15 @@ namespace ofxGrbl
         
         _closeSerial();
         
-        bConnected = serial.setup(port.get(), baudrate);
+        bConnected = serial.setup(port, baudrate);
         
         if (bConnected)
         {
-            ofLogVerbose(" ofxGrbl ") << "Connected to " << port << "@" << baudrate << " !" ;
+            ofLogVerbose("ofxGrbl") << "Connected to " << port << "@" << baudrate << " !" ;
         }
         else
         {
-            ofLogWarning(" ofxGrbl ", "Connect") << "Can not connect. Port " << port << " does not exists." ;
+            ofLogWarning("ofxGrbl", "connect") << "Can not connect. Port " << port << " does not exists." ;
         }
     }
 
@@ -440,7 +449,7 @@ namespace ofxGrbl
     {
         if(bSpindle != _enable)
         {
-            ofLogVerbose(" ofxGrbl ") << "enableSpindle(" << _enable << ", " << _direct << ")" ;
+            ofLogVerbose("ofxGrbl") << "enableSpindle(" << _enable << ", " << _direct << ")" ;
             bSpindle = _enable;
             sendMessage((bSpindle?"M3":"M5"), _direct);
         }
@@ -451,7 +460,7 @@ namespace ofxGrbl
     {
         if(_settings.spindleSpeed != _speed)
         {
-            ofLogVerbose(" ofxGrbl ") << "setSpindleSpeed(" << _speed << ", " << _direct << ")" ;
+            ofLogVerbose("ofxGrbl") << "setSpindleSpeed(" << _speed << ", " << _direct << ")" ;
             _settings.spindleSpeed = _speed;
             sendMessage("S" + ofToString((int)_settings.spindleSpeed), _direct);
         }
