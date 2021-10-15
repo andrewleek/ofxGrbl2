@@ -298,7 +298,7 @@ namespace ofxGrbl
     //--------------------------------------------------------------
     void device::sendMessage(const std::string& _msg, bool direct)
     {
-    	cout << _msg << endl;
+    	//cout << _msg << endl;
         if (direct) {
             if (bConnected)
             {
