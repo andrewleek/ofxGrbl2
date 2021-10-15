@@ -74,6 +74,7 @@ namespace ofxGrbl
             
             
             // events
+            ofEvent<string> StatusEvent;
             ofEvent<glm::vec3> PositionEvent;
             
             ofRectangle getArea(){return areaRect;}

@@ -85,21 +85,14 @@ namespace ofxGrbl
                         }
                         if (readBuffer[0] == '<')
                         {
-                            // parse grbl state message
-                            /*
-                             vector<string> _status = ofSplitString(readBuffer, ",");
-                             vector<string> _posx = ofSplitString(_status[1], ":");
-                             vector<string> _posz = ofSplitString(_status[3], ">");
-                             ofLogVerbose("ofxGrbl") << "[ POSITION ] " << _posx[1] << ", " << _status[2] << ", " << _posz[0] ;
-                             currentPos = ofVec2f(ofToFloat(_posx[1]) / (float)GRBL_WIDTH, ofToFloat(_status[2]) / (float)GRBL_HEIGHT);
-                             */
-                            
-                            ofLogVerbose("ofxGrbl") << "[ STATUS ] " << readBuffer;
-                            
                             readBuffer = readBuffer.substr(1, readBuffer.length() - 2);
                             vector<string> _status = ofSplitString(readBuffer, "|");
                             status = _status[0];
                             
+                            ofLogVerbose("ofxGrbl") << "[ STATUS ] " << status;
+                            
+                            ofNotifyEvent(StatusEvent, status);
+
                             vector<string> _pos_str = ofSplitString(_status[1], ":");
                             
                             if(_pos_str.size() > 1)
@@ -112,7 +105,6 @@ namespace ofxGrbl
                                 
                                 ofLogVerbose("ofxGrbl") << "[ POSITION ] " << currentPos;
                                 
-                                // Events
                                 ofNotifyEvent(PositionEvent, currentPos);
                             }
                         }
