@@ -58,36 +58,30 @@ namespace ofxGrbl
                 char _byte = (char)serial.readByte();
     //			cout <<_byte;
                 if (_byte == '\n' || _byte == '\r') {
-                    if (readBuffer != "") {
+                    if (readBuffer != "")
+                    {
                         ofLogVerbose("ofxGrbl") << "[ RECEIVE ] " << readBuffer ;
+                        
                         if (readBuffer.find("Grbl") != string::npos)
                         {
                             if (!isDeviceReady)
                             {
                                 isDeviceReady = true;
                                 sendMessage("$$", true);
-                                //sendSettings();
                             }
                         }
                         else if (readBuffer == "ok")
                         {
-                                isReadyToSend = true;
-                            //cout << "ready to send\n";
-                                //sentCount--;
-                                //ofLogVerbose("ofxGrbl") << "Sent: " << sentCount ;
+                            isReadyToSend = true;
                         }
                         else if (readBuffer.substr(0,6) == "error:")
                         {
-                                    ofLogVerbose("ofxGrbl") << "[ ERROR : " << getGrblStatusString(ofToInt(readBuffer.substr(6))) << " ]" ;
-                                
-    //						ofLogVerbose("ofxGrbl") << "[ ERROR ]";
-                                    //						isPause = true;
-                                    isReadyToSend = true;
+                            ofLogVerbose("ofxGrbl") << "[ ERROR : " << getGrblStatusString(ofToInt(readBuffer.substr(6))) << " ]" ;
+                            isReadyToSend = true;
                         }
                         else if (readBuffer.substr(0,6) == "ALARM:")
                         {
-                                ofLogVerbose("ofxGrbl") << "[ ALARM : " << getGrblAlarmString(ofToInt(readBuffer.substr(6))) << " ]" ;
-                                
+                            ofLogVerbose("ofxGrbl") << "[ ALARM : " << getGrblAlarmString(ofToInt(readBuffer.substr(6))) << " ]" ;
                         }
                         if (readBuffer[0] == '<')
                         {
@@ -100,13 +94,19 @@ namespace ofxGrbl
                              currentPos = ofVec2f(ofToFloat(_posx[1]) / (float)GRBL_WIDTH, ofToFloat(_status[2]) / (float)GRBL_HEIGHT);
                              */
                             
+                            ofLogVerbose("ofxGrbl") << "[ STATUS ] " << readBuffer;
+                            
                             readBuffer = readBuffer.substr(1, readBuffer.length() - 2);
                             vector<string> _status = ofSplitString(readBuffer, "|");
                             status = _status[0];
+                            
                             vector<string> _pos_str = ofSplitString(_status[1], ":");
-                            if(_pos_str.size() > 1){
+                            
+                            if(_pos_str.size() > 1)
+                            {
                                 vector<string> _pos = ofSplitString(_pos_str[1], ",");
-                                for(int pind = 0; pind < _pos.size() && pind < 3; pind++){
+                                for(int pind = 0; pind < _pos.size() && pind < 3; pind++)
+                                {
                                     currentPos[pind] = ofToFloat(_pos[pind]);
                                 }
                                 
