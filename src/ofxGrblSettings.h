@@ -181,7 +181,6 @@ ofxGrblSettings(){
 	ofParameter<float> upPos	 = {"Up Pos", 60};
 	ofParameter<float> downPos   = {"Down Pos", 90};
 
-
 	ofParameterGroup parameters;
 	ofParameterGroup steppersParams;
 	ofParameterGroup homingParams;
@@ -189,6 +188,7 @@ ofxGrblSettings(){
 	ofParameterGroup zAxisParams;
 	ofParameterGroup spindleParams;
 	ofParameterGroup otherParams;
+    
 	//--------------------------------------------------------------
 	void save(const std::string& settingsFileName) {
 		ofLogVerbose(" ofxGrbl ") << "saveSettings to " << settingsFileName ;
@@ -196,6 +196,7 @@ ofxGrblSettings(){
 		ofSerialize(xml, parameters);
 		xml.save(settingsFileName);
 	}
+    
 	//--------------------------------------------------------------
 	bool load(const std::string& settingsFileName) {
 		ofLogVerbose(" ofxGrbl ") << "loadSettings" ;
