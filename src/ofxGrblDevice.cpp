@@ -288,6 +288,21 @@ namespace ofxGrbl
     }
 
     //--------------------------------------------------------------
+    void device::softReset()
+    {
+        if (bConnected)
+        {
+            unsigned char resetByte = 24;
+            serial.writeByte(resetByte);
+        }
+        else
+        {
+            ofLogVerbose("ofxGrbl") << "sendMessage() : Serial is not connected." ;
+        }
+        
+    }
+
+    //--------------------------------------------------------------
     void device::sendMessage(const std::string& _msg, bool direct)
     {
     	//cout << _msg << endl;

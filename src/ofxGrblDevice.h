@@ -31,6 +31,8 @@ namespace ofxGrbl
             
             void loadGCodeFromFile(const std::string& _path);
             
+            void softReset();
+
             void sendMessage(const std::string& _msg, bool direct = false);
             
             void clear();
